@@ -28,4 +28,10 @@ public class EmployeeController {
     {
         return employeeService.deleteEmployee(uuid);
     }
+
+    @PatchMapping("/update")
+    public  ResponseEntity<?> updateEmployee(@RequestBody(required = false) Employee employee)
+    {
+        return employeeService.updateEmployee(employee);
+    }
 }

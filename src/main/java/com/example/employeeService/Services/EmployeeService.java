@@ -2,8 +2,10 @@ package com.example.employeeService.Services;
 
 import com.example.employeeService.Models.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultLifecycleProcessor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -68,4 +70,41 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    public  ResponseEntity<?> updateEmployee(@RequestBody(required = false) Employee employee)
+    {
+        List<Employee> existingEmployee=new ArrayList<>();
+        Query query=new Query(Criteria.where("uuid").is(employee.uuid));
+        existingEmployee=mongoTemplate.find(query,Employee.class);
+        String message="";
+        if (existingEmployee.isEmpty())
+        {
+            message="User not found";
+        }
+        else
+        {
+            message="User found";
+            if(employee.getEmployeeName()!=null)
+            {
+                mongoTemplate.findAndModify(query,new Update().set("employeeName",employee.getEmployeeName()),Employee.class);
+            }
+            if (employee.getProfileImage()!=null)
+            {
+                mongoTemplate.findAndModify(query,new Update().set("profileImage",employee.getProfileImage()),Employee.class);
+            }
+            if(employee.getReportsTo()!=null)
+            {
+                mongoTemplate.findAndModify(query,new Update().set("reportsTo",employee.getReportsTo()),Employee.class);
+            }
+            if (employee.getEmail()!=null)
+            {
+                mongoTemplate.findAndModify(query,new Update().set("email",employee.getEmail()),Employee.class);
+            }
+            if(employee.getPhoneNumber()!=null)
+            {
+                mongoTemplate.findAndModify(query,new Update().set("phoneNumber",employee.getPhoneNumber()),Employee.class);
+            }
+        }
+        String response="{\"message\":\""+message+"\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
