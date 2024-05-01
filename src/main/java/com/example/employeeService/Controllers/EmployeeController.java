@@ -22,4 +22,10 @@ public class EmployeeController {
     {
         return employeeService.getEmployees();
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteEmployee(@RequestParam(required = false)  String uuid)
+    {
+        return employeeService.deleteEmployee(uuid);
+    }
 }
