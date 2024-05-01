@@ -1,5 +1,6 @@
 package com.example.employeeService.Services;
 
+import com.example.employeeService.Models.EmailRequest;
 import com.example.employeeService.Models.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultLifecycleProcessor;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.Comparator;
 
 import java.util.*;
@@ -40,9 +43,41 @@ public class EmployeeService {
         String employeeId = UUID.randomUUID().toString();
         employee.setUuid(employeeId);
         mongoTemplate.save(employee);
+
+        String managerID=employee.getReportsTo();
+        if(managerID!=null)
+        {
+            Query query=new Query(Criteria.where("uuid").is(managerID));
+            List<Employee> manager=new ArrayList<>();
+            manager=mongoTemplate.find(query,Employee.class);
+
+            String managerEmail=manager.get(0).email;
+
+            EmailRequest emailRequest = new EmailRequest();
+            emailRequest.setName(employee.employeeName);
+            emailRequest.setMail(employee.email);
+            emailRequest.setMobile(employee.phoneNumber);
+            emailRequest.setSubject("New employee added");
+            emailRequest.setMessage(employee.employeeName+" will now work under you");
+            sendEmail(emailRequest);
+        }
+
         String response = "{\"message\":\"Employee Added Successfully\", \"UUID\":\"" + employee.getUuid() + "\"}";
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    public void sendEmail(EmailRequest emailRequest) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "https://helper-api-vignu.el.r.appspot.com/mail_merchant/sendmail/663263cb5fee3ae2701d0c97";
+
+        try {
+            restTemplate.postForObject(url, emailRequest, String.class);
+            System.out.println("Email sent successfully!");
+        } catch (Exception e) {
+            System.out.println("Error sending email: " + e.getMessage());
+        }
+    }
+
 
 //    public ResponseEntity<?> getEmployees()
 //    {
