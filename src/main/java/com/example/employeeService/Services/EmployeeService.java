@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,9 +34,17 @@ public class EmployeeService {
         }
 
         String employeeId = UUID.randomUUID().toString();
-        employee.setUUID(employeeId);
+        employee.setUuid(employeeId);
         mongoTemplate.save(employee);
-        String response = "{\"message\":\"Employee Added Successfully\", \"UUID\":\"" + employee.getUUID() + "\"}";
+        String response = "{\"message\":\"Employee Added Successfully\", \"UUID\":\"" + employee.getUuid() + "\"}";
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    public ResponseEntity<?> getEmployees()
+    {
+        List<Employee> employees=new ArrayList<>();
+        employees=mongoTemplate.findAll(Employee.class);
+        return ResponseEntity.status(HttpStatus.FOUND).body(employees);
+
     }
 }

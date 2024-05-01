@@ -16,4 +16,10 @@ public class EmployeeController {
     public ResponseEntity<String> addEmployee(@RequestBody (required = true)Employee employee) {
         return employeeService.addEmployee(employee);
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllEmployee()
+    {
+        return employeeService.getEmployees();
+    }
 }
