@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.Comparator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class EmployeeService {
@@ -46,12 +44,52 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    public ResponseEntity<?> getEmployees()
+//    public ResponseEntity<?> getEmployees()
+//    {
+//        List<Employee> employees=new ArrayList<>();
+//        employees=mongoTemplate.findAll(Employee.class);
+//        return ResponseEntity.status(HttpStatus.FOUND).body(employees);
+//
+//    }
+
+    public ResponseEntity<?> getEmployees(int pageNumber,int pageSize,String sort)
     {
         List<Employee> employees=new ArrayList<>();
         employees=mongoTemplate.findAll(Employee.class);
-        return ResponseEntity.status(HttpStatus.FOUND).body(employees);
 
+        List<List<Employee>> dashboard=new ArrayList<>();
+        int count=0;
+        int n=0;
+        List<Employee> page=new ArrayList<>();
+        while (n< employees.size()) {
+            if (count<pageSize)
+            {
+                count=count+1;
+                page.add(employees.get(n));
+            }
+            else
+            {
+                dashboard.add(page);
+                page=new ArrayList<>();
+                count=0;
+                count=count+1;
+                page.add(employees.get(n));
+            }
+            n=n+1;
+        }
+        dashboard.add(page);
+        List<Employee> requiredPage=new ArrayList<>();
+        requiredPage=dashboard.get(pageNumber-1);
+
+        if(sort.equals("email"))
+        {
+            requiredPage.sort(Comparator.comparing(Employee::getEmail));
+        }
+        else if(sort.equals("employeeName"))
+        {
+            requiredPage.sort(Comparator.comparing(Employee::getEmployeeName));
+        }
+        return ResponseEntity.status(HttpStatus.FOUND).body(requiredPage);
     }
 
     public ResponseEntity<?> deleteEmployee(String uuid) {

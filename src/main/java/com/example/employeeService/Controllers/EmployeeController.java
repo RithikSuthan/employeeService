@@ -17,10 +17,15 @@ public class EmployeeController {
         return employeeService.addEmployee(employee);
     }
 
+//    @GetMapping("/users")
+//    public ResponseEntity<?> getAllEmployee()
+//    {
+//        return employeeService.getEmployees();
+//    }
     @GetMapping("/users")
-    public ResponseEntity<?> getAllEmployee()
+    public ResponseEntity<?> getAllEmployee(@RequestParam int pageNumber,@RequestParam int pageSize,@RequestParam String sort)
     {
-        return employeeService.getEmployees();
+        return employeeService.getEmployees(pageNumber,pageSize,sort);
     }
 
     @DeleteMapping("/delete")
