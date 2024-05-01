@@ -34,4 +34,10 @@ public class EmployeeController {
     {
         return employeeService.updateEmployee(employee);
     }
+
+    @GetMapping("/report")
+    public ResponseEntity<?> employeeReportsTo(@RequestParam(required = true) String uuid,@RequestParam(required = true) int level)
+    {
+        return employeeService.employeeReportsTo(uuid,level);
+    }
 }

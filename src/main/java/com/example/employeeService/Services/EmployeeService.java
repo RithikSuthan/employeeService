@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,5 +108,30 @@ public class EmployeeService {
         }
         String response="{\"message\":\""+message+"\"}";
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    public ResponseEntity<?> employeeReportsTo(String uuid,int level)
+    {
+        String message="";
+        while(level!=0){
+            List<Employee> employee=new ArrayList<>();
+            Query query=new Query(Criteria.where("uuid").is(uuid));
+            employee=mongoTemplate.find(query,Employee.class);
+            if(employee.isEmpty())
+            {
+                message="User not found";
+                break;
+            }
+            uuid=employee.get(0).reportsTo;
+            level=level-1;
+        }
+        List<Employee> manager=new ArrayList<>();
+        if(message=="")
+        {
+            Query query=new Query(Criteria.where("uuid").is(uuid));
+            manager=mongoTemplate.find(query,Employee.class);
+            return ResponseEntity.status(HttpStatus.OK).body(manager);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 }
