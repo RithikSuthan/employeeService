@@ -58,15 +58,18 @@ public class EmployeeService {
             List<Employee> manager=new ArrayList<>();
             manager=mongoTemplate.find(query,Employee.class);
 
-            String managerEmail=manager.get(0).email;
+            if(manager!=null)
+            {
+                String managerEmail=manager.get(0).email;
 
-            EmailRequest emailRequest = new EmailRequest();
-            emailRequest.setName(employee.employeeName);
-            emailRequest.setMail(employee.email);
-            emailRequest.setMobile(employee.phoneNumber);
-            emailRequest.setSubject("New employee added");
-            emailRequest.setMessage(employee.employeeName+" will now work under you");
-            sendEmail(emailRequest);
+                EmailRequest emailRequest = new EmailRequest();
+                emailRequest.setName(employee.employeeName);
+                emailRequest.setMail(employee.email);
+                emailRequest.setMobile(employee.phoneNumber);
+                emailRequest.setSubject("New employee added");
+                emailRequest.setMessage(employee.employeeName+" will now work under you");
+                sendEmail(emailRequest);
+            }
         }
 
         String response = "{\"message\":\"Employee Added Successfully\", \"UUID\":\"" + employee.getUuid() + "\"}";
