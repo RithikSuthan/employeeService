@@ -73,7 +73,7 @@ public class EmployeeService {
         }
 
         String response = "{\"message\":\"Employee Added Successfully\", \"UUID\":\"" + employee.getUuid() + "\"}";
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     public void sendEmail(EmailRequest emailRequest) {
