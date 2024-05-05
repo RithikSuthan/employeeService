@@ -28,6 +28,11 @@ public class EmployeeController {
     {
         return employeeService.getEmployees(pageNumber,pageSize,sort);
     }
+    @GetMapping("/fetch")
+    public ResponseEntity<?> fetchEmployee()
+    {
+        return employeeService.getAllEmployees();
+    }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteEmployee(@RequestParam(required = false)  String uuid)
@@ -51,5 +56,11 @@ public class EmployeeController {
     public ResponseEntity<?> login(@RequestBody UserLogin user)
     {
         return employeeService.login(user);
+    }
+
+    @GetMapping("/fetchManagers")
+    public ResponseEntity<?> fetchManagers()
+    {
+        return employeeService.fetchManagers();
     }
 }

@@ -18,5 +18,8 @@ public class Employee {
     public String profileImage;
     @JsonProperty("uuid")
     public String uuid;
-
+    @JsonProperty("manager")
+    public String manager;
+    @JsonProperty("position")
+    public String position;
 }

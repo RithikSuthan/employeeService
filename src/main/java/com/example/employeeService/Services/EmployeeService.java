@@ -43,6 +43,12 @@ public class EmployeeService {
 
         String employeeId = UUID.randomUUID().toString();
         employee.setUuid(employeeId);
+        Query query1=new Query(Criteria.where("uuid").is(employee.getReportsTo()));
+        Employee checkManager=mongoTemplate.findOne(query1,Employee.class);
+        if(checkManager!=null && checkManager.employeeName!=null)
+        {
+            employee.setManager(checkManager.employeeName);
+        }
         mongoTemplate.save(employee);
 
         String managerID=employee.getReportsTo();
@@ -80,13 +86,11 @@ public class EmployeeService {
     }
 
 
-//    public ResponseEntity<?> getEmployees()
-//    {
-//        List<Employee> employees=new ArrayList<>();
-//        employees=mongoTemplate.findAll(Employee.class);
-//        return ResponseEntity.status(HttpStatus.FOUND).body(employees);
-//
-//    }
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        List<Employee> employees = mongoTemplate.findAll(Employee.class);
+        return ResponseEntity.status(HttpStatus.OK).body(employees);
+    }
+
 
     public ResponseEntity<?> getEmployees(int pageNumber,int pageSize,String sort)
     {
@@ -234,5 +238,17 @@ public class EmployeeService {
         System.out.println(existingUser.get(0).getName());
         String response= "{\"message\":"+"\""+message+"\",\"name\":\""+existingUser.get(0).getName()+"\"}";
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    public ResponseEntity<?> fetchManagers()
+    {
+        ArrayList<String> posi=new ArrayList<>();
+        posi.add("Manager");
+        posi.add("Team Leader");
+        posi.add("CEO");
+        Query query=new Query(Criteria.where("position").in(posi));
+
+        List<Employee> mainMembers=mongoTemplate.find(query,Employee.class);
+        return ResponseEntity.status(HttpStatus.OK).body(mainMembers);
     }
 }
