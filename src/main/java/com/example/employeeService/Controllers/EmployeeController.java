@@ -1,6 +1,7 @@
 package com.example.employeeService.Controllers;
 
 import com.example.employeeService.Models.Employee;
+import com.example.employeeService.Models.UserLogin;
 import com.example.employeeService.Services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +45,11 @@ public class EmployeeController {
     public ResponseEntity<?> employeeReportsTo(@RequestParam(required = true) String uuid,@RequestParam(required = true) int level)
     {
         return employeeService.employeeReportsTo(uuid,level);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserLogin user)
+    {
+        return employeeService.login(user);
     }
 }

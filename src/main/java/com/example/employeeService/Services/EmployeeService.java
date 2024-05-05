@@ -2,6 +2,7 @@ package com.example.employeeService.Services;
 
 import com.example.employeeService.Models.EmailRequest;
 import com.example.employeeService.Models.Employee;
+import com.example.employeeService.Models.UserLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultLifecycleProcessor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -206,5 +207,32 @@ public class EmployeeService {
             return ResponseEntity.status(HttpStatus.OK).body(manager);
         }
         return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    public ResponseEntity<?> login(UserLogin user)
+    {
+        List<UserLogin> existing=new ArrayList<>();
+        List<UserLogin> existingUser=new ArrayList<>();
+        Query query1=new Query(Criteria.where("userName").is(user.userName));
+        Query query=new Query(Criteria.where("userName").is(user.userName).and("password").is(user.password));
+        existing=mongoTemplate.find(query,UserLogin.class);
+        existingUser=mongoTemplate.find(query1,UserLogin.class);
+        String message="";
+        if (existingUser.isEmpty())
+        {
+            message="User not Found";
+        }
+        if (!existingUser.isEmpty() && existing.isEmpty())
+        {
+            message="Incorrect Password";
+        }
+        else
+        {
+            message="Login Successful";
+        }
+//        String response= "{\"message\":"+"\""+message+"\""+"}";
+        System.out.println(existingUser.get(0).getName());
+        String response= "{\"message\":"+"\""+message+"\",\"name\":\""+existingUser.get(0).getName()+"\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
