@@ -165,7 +165,7 @@ public class EmployeeService {
         }
         else
         {
-            message="User found";
+            message="Data Updated Successfully";
             if(employee.getEmployeeName()!=null)
             {
                 mongoTemplate.findAndModify(query,new Update().set("employeeName",employee.getEmployeeName()),Employee.class);
