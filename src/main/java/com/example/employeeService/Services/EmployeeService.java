@@ -254,13 +254,14 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    public ResponseEntity<?> fetchManagers()
+    public ResponseEntity<?> fetchManagers(String company,String creator)
     {
         ArrayList<String> posi=new ArrayList<>();
         posi.add("Manager");
         posi.add("Team Leader");
         posi.add("CEO");
-        Query query=new Query(Criteria.where("position").in(posi));
+        Query query=new Query(Criteria.where("position").in(posi).and("company").is(company)
+                .and("creator").is(creator));
 
         List<Employee> mainMembers=mongoTemplate.find(query,Employee.class);
         return ResponseEntity.status(HttpStatus.OK).body(mainMembers);

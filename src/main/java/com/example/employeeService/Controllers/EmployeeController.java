@@ -59,9 +59,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/fetchManagers")
-    public ResponseEntity<?> fetchManagers()
+    public ResponseEntity<?> fetchManagers(@RequestParam String company,@RequestParam String creator)
     {
-        return employeeService.fetchManagers();
+        return employeeService.fetchManagers(company,creator);
     }
 
     @GetMapping("/find")
