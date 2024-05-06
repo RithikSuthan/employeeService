@@ -22,4 +22,6 @@ public class Employee {
     public String manager;
     @JsonProperty("position")
     public String position;
+    @JsonProperty("company")
+    public String company;
 }

@@ -9,4 +9,5 @@ public class UserLogin {
     public String name;
     public String userName;
     public String password;
+    public String company;
 }

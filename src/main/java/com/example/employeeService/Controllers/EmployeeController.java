@@ -69,4 +69,10 @@ public class EmployeeController {
     {
         return employeeService.findEmployee(uuid);
     }
+
+    @PutMapping("/register")
+    public  ResponseEntity<?> registerEmployee(@RequestBody UserLogin user)
+    {
+        return employeeService.registerEmployee(user);
+    }
 }

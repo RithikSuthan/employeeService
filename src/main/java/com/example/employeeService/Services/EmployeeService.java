@@ -269,4 +269,32 @@ public class EmployeeService {
         Employee employee=mongoTemplate.findOne(query, Employee.class);
         return ResponseEntity.status(HttpStatus.OK).body(employee);
     }
+
+    public ResponseEntity<?> registerEmployee(UserLogin user)
+    {
+        String message="";
+        if(user.getName()==null || user.getName()=="")
+        {
+            message="name is missing";
+        }
+        else if(user.getUserName()==null || user.getUserName()=="")
+        {
+            message="email id missing";
+        }
+        else if(user.getPassword()==null || user.getPassword()=="")
+        {
+            message="password missing";
+        }
+        else if(user.getCompany()==null || user.getCompany()=="")
+        {
+            message="company missing";
+        }
+        else
+        {
+            message="User saved successfully";
+            mongoTemplate.save(user);
+        }
+        String response="{\"message\":\""+message+"\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
