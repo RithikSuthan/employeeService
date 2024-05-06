@@ -29,9 +29,9 @@ public class EmployeeController {
         return employeeService.getEmployees(pageNumber,pageSize,sort);
     }
     @GetMapping("/fetch")
-    public ResponseEntity<?> fetchEmployee()
+    public ResponseEntity<?> fetchEmployee(@RequestParam String company,@RequestParam String creator)
     {
-        return employeeService.getAllEmployees();
+        return employeeService.getAllEmployees(company,creator);
     }
 
     @DeleteMapping("/delete")

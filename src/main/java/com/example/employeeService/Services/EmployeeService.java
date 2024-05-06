@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
@@ -89,8 +90,9 @@ public class EmployeeService {
     }
 
 
-    public ResponseEntity<List<Employee>> getAllEmployees() {
-        List<Employee> employees = mongoTemplate.findAll(Employee.class);
+    public ResponseEntity<List<Employee>> getAllEmployees(String company,String creator) {
+        Query query=new Query(Criteria.where("company").is(company).and("creator").is(creator));
+        List<Employee> employees = mongoTemplate.find(query,Employee.class);
         return ResponseEntity.status(HttpStatus.OK).body(employees);
     }
 
@@ -247,7 +249,8 @@ public class EmployeeService {
         }
 //        String response= "{\"message\":"+"\""+message+"\""+"}";
         System.out.println(existingUser.get(0).getName());
-        String response= "{\"message\":"+"\""+message+"\",\"name\":\""+existingUser.get(0).getName()+"\"}";
+        String response= "{\"message\":"+"\""+message+"\",\"name\":\""+existingUser.get(0).getName()+"\"" +
+                ",\"company\":\""+existingUser.get(0).getCompany()+"\""+",\"userName\":\""+existingUser.get(0).getUserName()+"\"}";
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
