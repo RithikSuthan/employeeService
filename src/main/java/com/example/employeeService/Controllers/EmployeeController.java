@@ -34,10 +34,10 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteEmployee(@RequestParam(required = false)  String uuid)
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteEmployee(@RequestBody(required = false)  Employee user)
     {
-        return employeeService.deleteEmployee(uuid);
+        return employeeService.deleteEmployee(user.getUuid());
     }
 
     @PatchMapping("/update")
