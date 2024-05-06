@@ -34,10 +34,10 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<?> deleteEmployee(@RequestBody(required = false)  Employee user)
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteEmployee(@RequestParam String uuid)
     {
-        return employeeService.deleteEmployee(user.getUuid());
+        return employeeService.deleteEmployee(uuid);
     }
 
     @PatchMapping("/update")
@@ -62,5 +62,11 @@ public class EmployeeController {
     public ResponseEntity<?> fetchManagers()
     {
         return employeeService.fetchManagers();
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<?> findEmployee(@RequestParam String uuid)
+    {
+        return employeeService.findEmployee(uuid);
     }
 }

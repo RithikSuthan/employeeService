@@ -254,4 +254,11 @@ public class EmployeeService {
         List<Employee> mainMembers=mongoTemplate.find(query,Employee.class);
         return ResponseEntity.status(HttpStatus.OK).body(mainMembers);
     }
+
+    public ResponseEntity<?> findEmployee(String uuid)
+    {
+        Query query=new Query(Criteria.where("uuid").is(uuid));
+        Employee employee=mongoTemplate.findOne(query, Employee.class);
+        return ResponseEntity.status(HttpStatus.OK).body(employee);
+    }
 }
