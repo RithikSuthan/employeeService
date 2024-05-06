@@ -186,6 +186,14 @@ public class EmployeeService {
             {
                 mongoTemplate.findAndModify(query,new Update().set("phoneNumber",employee.getPhoneNumber()),Employee.class);
             }
+            if(employee.getPosition()!=null)
+            {
+                mongoTemplate.findAndModify(query,new Update().set("position",employee.getPosition()),Employee.class);
+            }
+            if(employee.getManager()!=null)
+            {
+                mongoTemplate.findAndModify(query,new Update().set("manager",employee.getManager()),Employee.class);
+            }
         }
         String response="{\"message\":\""+message+"\"}";
         return ResponseEntity.status(HttpStatus.OK).body(response);
