@@ -75,4 +75,9 @@ public class EmployeeController {
     {
         return employeeService.registerEmployee(user);
     }
+    @GetMapping("/existemail")
+    public ResponseEntity<?> checkExistEmail(@RequestParam String email)
+    {
+        return employeeService.checkExistEmail(email);
+    }
 }

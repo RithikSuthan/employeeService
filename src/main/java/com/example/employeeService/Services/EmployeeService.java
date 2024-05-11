@@ -3,6 +3,7 @@ package com.example.employeeService.Services;
 import com.example.employeeService.Models.EmailRequest;
 import com.example.employeeService.Models.Employee;
 import com.example.employeeService.Models.UserLogin;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultLifecycleProcessor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -297,6 +298,21 @@ public class EmployeeService {
         {
             message="User saved successfully";
             mongoTemplate.save(user);
+        }
+        String response="{\"message\":\""+message+"\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    public ResponseEntity<?>checkExistEmail(String email)
+    {
+        Query query=new Query(Criteria.where("userName").is(email));
+        UserLogin exist=mongoTemplate.findOne(query,UserLogin.class);
+        String message;
+        if(exist!=null) {
+            message="This email Already exists";
+        }
+        else
+        {
+            message="New user";
         }
         String response="{\"message\":\""+message+"\"}";
         return ResponseEntity.status(HttpStatus.OK).body(response);
