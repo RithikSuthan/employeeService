@@ -229,29 +229,28 @@ public class EmployeeService {
 
     public ResponseEntity<?> login(UserLogin user)
     {
-        List<UserLogin> existing=new ArrayList<>();
-        List<UserLogin> existingUser=new ArrayList<>();
         Query query1=new Query(Criteria.where("userName").is(user.userName));
         Query query=new Query(Criteria.where("userName").is(user.userName).and("password").is(user.password));
-        existing=mongoTemplate.find(query,UserLogin.class);
-        existingUser=mongoTemplate.find(query1,UserLogin.class);
+        UserLogin existing=mongoTemplate.findOne(query,UserLogin.class);
+        UserLogin existingUser=mongoTemplate.findOne(query1,UserLogin.class);
         String message="";
-        if (existingUser.isEmpty())
+        String response;
+        if (existingUser==null)
         {
             message="User not Found";
+            response= "{\"message\":"+"\""+message+"\""+"}";
         }
-        if (!existingUser.isEmpty() && existing.isEmpty())
+        else if (existingUser==null && existing==null)
         {
             message="Incorrect Password";
+            response= "{\"message\":"+"\""+message+"\""+"}";
         }
         else
         {
             message="Login Successful";
+            response= "{\"message\":"+"\""+message+"\",\"name\":\""+existingUser.getName()+"\"" +
+                    ",\"company\":\""+existingUser.getCompany()+"\""+",\"userName\":\""+existingUser.getUserName()+"\"}";
         }
-//        String response= "{\"message\":"+"\""+message+"\""+"}";
-        System.out.println(existingUser.get(0).getName());
-        String response= "{\"message\":"+"\""+message+"\",\"name\":\""+existingUser.get(0).getName()+"\"" +
-                ",\"company\":\""+existingUser.get(0).getCompany()+"\""+",\"userName\":\""+existingUser.get(0).getUserName()+"\"}";
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
