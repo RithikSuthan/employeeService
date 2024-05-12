@@ -9,4 +9,5 @@ public class EmailRequest {
     public String subject;
     public String message;
     public String mobile;
+    public String managerEmail;
 }

@@ -68,6 +68,7 @@ public class EmployeeService {
                 emailRequest.setName(employee.employeeName);
                 emailRequest.setMail(employee.email);
                 emailRequest.setMobile(employee.phoneNumber);
+                emailRequest.setManagerEmail(managerEmail);
                 emailRequest.setSubject("New employee added");
                 emailRequest.setMessage(employee.employeeName+" will now work under you");
                 sendEmail(emailRequest);
@@ -80,7 +81,8 @@ public class EmployeeService {
 
     public void sendEmail(EmailRequest emailRequest) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "https://helper-api-vignu.el.r.appspot.com/mail_merchant/sendmail/663263cb5fee3ae2701d0c97";
+//        String url = "https://helper-api-vignu.el.r.appspot.com/mail_merchant/sendmail/663263cb5fee3ae2701d0c97";
+        String url = "http://127.0.0.1:5000/reportManager";
 
         try {
             restTemplate.postForObject(url, emailRequest, String.class);
@@ -305,6 +307,21 @@ public class EmployeeService {
     {
         Query query=new Query(Criteria.where("userName").is(email));
         UserLogin exist=mongoTemplate.findOne(query,UserLogin.class);
+        String message;
+        if(exist!=null) {
+            message="This email Already exists";
+        }
+        else
+        {
+            message="New user";
+        }
+        String response="{\"message\":\""+message+"\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    public ResponseEntity<?>checkExistEmployee(String email)
+    {
+        Query query=new Query(Criteria.where("userName").is(email));
+        Employee exist=mongoTemplate.findOne(query,Employee.class);
         String message;
         if(exist!=null) {
             message="This email Already exists";

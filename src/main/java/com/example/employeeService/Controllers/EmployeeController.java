@@ -80,4 +80,10 @@ public class EmployeeController {
     {
         return employeeService.checkExistEmail(email);
     }
+
+    @GetMapping("/existemployee")
+    public ResponseEntity<?> checkExistEmployee(@RequestParam String email)
+    {
+        return employeeService.checkExistEmployee(email);
+    }
 }
