@@ -320,7 +320,7 @@ public class EmployeeService {
     }
     public ResponseEntity<?>checkExistEmployee(String email)
     {
-        Query query=new Query(Criteria.where("userName").is(email));
+        Query query=new Query(Criteria.where("email").is(email));
         Employee exist=mongoTemplate.findOne(query,Employee.class);
         String message;
         if(exist!=null) {
