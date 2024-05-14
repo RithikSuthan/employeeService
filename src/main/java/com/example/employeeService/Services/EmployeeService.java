@@ -54,13 +54,13 @@ public class EmployeeService {
         mongoTemplate.save(employee);
 
         String managerID=employee.getReportsTo();
-        if(managerID!=null)
+        if(managerID!=null && managerID!="")
         {
             Query query=new Query(Criteria.where("uuid").is(managerID));
             List<Employee> manager=new ArrayList<>();
             manager=mongoTemplate.find(query,Employee.class);
 
-            if(manager!=null)
+            if(manager!=null && managerID!="")
             {
                 String managerEmail=manager.get(0).email;
 
@@ -82,7 +82,7 @@ public class EmployeeService {
     public void sendEmail(EmailRequest emailRequest) {
         RestTemplate restTemplate = new RestTemplate();
 //        String url = "https://helper-api-vignu.el.r.appspot.com/mail_merchant/sendmail/663263cb5fee3ae2701d0c97";
-        String url = "http://127.0.0.1:5000/reportManager";
+        String url = "https://mailboxexpress.el.r.appspot.com/reportManager";
 
         try {
             restTemplate.postForObject(url, emailRequest, String.class);
