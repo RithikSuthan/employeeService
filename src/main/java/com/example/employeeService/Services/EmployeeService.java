@@ -237,7 +237,7 @@ public class EmployeeService {
         UserLogin existingUser=mongoTemplate.findOne(query1,UserLogin.class);
         String message="";
         String response;
-        if (existingUser==null)
+        if (existing==null)
         {
             message="User not Found";
             response= "{\"message\":"+"\""+message+"\""+"}";
