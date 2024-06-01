@@ -45,6 +45,7 @@ public class EmployeeService {
 
         String employeeId = UUID.randomUUID().toString();
         employee.setUuid(employeeId);
+        employee.setPassword(employee.getPhoneNumber());
         Query query1=new Query(Criteria.where("uuid").is(employee.getReportsTo()));
         Employee checkManager=mongoTemplate.findOne(query1,Employee.class);
         if(checkManager!=null && checkManager.employeeName!=null)
@@ -239,7 +240,16 @@ public class EmployeeService {
         String response;
         if (existing==null)
         {
-            message="User not Found";
+            Query isEmployee=new Query(Criteria.where("email").is(user.userName).and("password").is(user.password));
+            Employee existEmployee=mongoTemplate.findOne(isEmployee, Employee.class);
+            if (existEmployee==null)
+            {
+                message="User not Found";
+            }
+            else
+            {
+                message="Employee Login Success";
+            }
             response= "{\"message\":"+"\""+message+"\""+"}";
         }
         else if (existingUser==null && existing==null)

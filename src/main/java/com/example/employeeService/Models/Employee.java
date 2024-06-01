@@ -26,4 +26,5 @@ public class Employee {
     public String company;
     @JsonProperty("creator")
     public String creator;
+    public  String password;
 }
