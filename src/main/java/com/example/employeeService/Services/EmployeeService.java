@@ -250,7 +250,8 @@ public class EmployeeService {
             {
                 message="Employee Login Success";
             }
-            response= "{\"message\":"+"\""+message+"\""+"}";
+            response= "{\"message\":"+"\""+message+"\",\"name\":\""+existEmployee.getEmployeeName()+"\"" +
+                    ",\"company\":\""+existEmployee.getCompany()+"\""+",\"userName\":\""+existEmployee.getEmail()+"\"}";
         }
         else if (existingUser==null && existing==null)
         {
