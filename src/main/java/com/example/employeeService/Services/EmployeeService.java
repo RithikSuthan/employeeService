@@ -2,6 +2,7 @@ package com.example.employeeService.Services;
 
 import com.example.employeeService.Models.EmailRequest;
 import com.example.employeeService.Models.Employee;
+import com.example.employeeService.Models.LeaveRequest;
 import com.example.employeeService.Models.UserLogin;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -343,5 +344,39 @@ public class EmployeeService {
         }
         String response="{\"message\":\""+message+"\"}";
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    public ResponseEntity<?> leaveRequest(LeaveRequest leave)
+    {
+        String Message="";
+        Query query=new Query(Criteria.where("email").is(leave.getEmail()));
+        Employee exist=mongoTemplate.findOne(query,Employee.class);
+        if(exist.getManager()!=null)
+        {
+            Query managerQuery=new Query(Criteria.where("employeeName").is(exist.manager));
+            Employee manager=mongoTemplate.findOne(managerQuery,Employee.class);
+            if(manager!=null)
+            {
+                if(manager.leaveRequests==null)
+                {
+                    manager.leaveRequests=new ArrayList<>();
+                }
+                manager.leaveRequests.add(leave);
+            }
+            mongoTemplate.findAndRemove(managerQuery, Employee.class);
+            mongoTemplate.save(manager);
+        }
+        Query hrQuery=new Query(Criteria.where("company").is(exist.getCompany()));
+        UserLogin hr=mongoTemplate.findOne(hrQuery,UserLogin.class);
+        if(hr!=null)
+        {
+            if(hr.leaveRequests==null)
+            {
+                hr.leaveRequests=new ArrayList<>();
+            }
+            hr.leaveRequests.add(leave);
+            mongoTemplate.findAndRemove(hrQuery,UserLogin.class);
+            mongoTemplate.save(hr);
+        }
+        return  ResponseEntity.status(HttpStatus.OK).body("Request Successful");
     }
 }

@@ -3,6 +3,8 @@ package com.example.employeeService.Models;
 import com.couchbase.client.core.deps.com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Employee {
 
@@ -27,4 +29,5 @@ public class Employee {
     @JsonProperty("creator")
     public String creator;
     public  String password;
+    public List<LeaveRequest> leaveRequests;
 }

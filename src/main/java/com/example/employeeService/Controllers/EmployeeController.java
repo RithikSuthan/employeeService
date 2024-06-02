@@ -1,6 +1,7 @@
 package com.example.employeeService.Controllers;
 
 import com.example.employeeService.Models.Employee;
+import com.example.employeeService.Models.LeaveRequest;
 import com.example.employeeService.Models.UserLogin;
 import com.example.employeeService.Services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,5 +86,10 @@ public class EmployeeController {
     public ResponseEntity<?> checkExistEmployee(@RequestParam String email)
     {
         return employeeService.checkExistEmployee(email);
+    }
+    @PostMapping("/leave")
+    public ResponseEntity<?> leaveRequest(@RequestBody LeaveRequest leave)
+    {
+        return  employeeService.leaveRequest(leave);
     }
 }
