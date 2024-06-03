@@ -28,6 +28,8 @@ public class Employee {
     public String company;
     @JsonProperty("creator")
     public String creator;
+    @JsonProperty("password")
     public  String password;
+    @JsonProperty("leaveRequests")
     public List<LeaveRequest> leaveRequests;
 }

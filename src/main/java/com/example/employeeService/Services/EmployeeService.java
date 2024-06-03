@@ -251,8 +251,11 @@ public class EmployeeService {
             {
                 message="Employee Login Success";
             }
-            response= "{\"message\":"+"\""+message+"\",\"name\":\""+existEmployee.getEmployeeName()+"\"" +
-                    ",\"company\":\""+existEmployee.getCompany()+"\""+",\"userName\":\""+existEmployee.getEmail()+"\"}";
+            response = "{\"message\":\"" + message + "\",\"name\":\"" + existEmployee.getEmployeeName() + "\"" +
+                    ",\"company\":\"" + existEmployee.getCompany() + "\"" +
+                    ",\"userName\":\"" + existEmployee.getEmail() + "\"" +
+                    ",\"uuid\":\"" + existEmployee.getUuid() + "\"}";
+
         }
         else if (existingUser==null && existing==null)
         {
