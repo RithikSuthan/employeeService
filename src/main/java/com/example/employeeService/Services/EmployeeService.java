@@ -386,6 +386,7 @@ public class EmployeeService {
         Query query=new Query(Criteria.where("uuid").is(task.uuid));
         Employee exist =mongoTemplate.findOne(query,Employee.class);
         task.setStatus("assigned");
+        task.setWorkStatus("Not Yet Started");
         task.setTaskId(UUID.randomUUID().toString());
         if(exist!=null)
         {
@@ -418,6 +419,21 @@ public class EmployeeService {
                 .and("tasks.taskId").is(taskId));
         mongoTemplate.findAndModify(query,new Update().set("tasks.$.status",status),Employee.class);
         String message="{\"message\":\""+"Status updated Successfully"+"\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+    public ResponseEntity<?> updateWorkStatus(String uuid,String taskId,String workstatus)
+    {
+        Query query = new Query(Criteria.where("uuid").is(uuid)
+                .and("tasks.taskId").is(taskId));
+        mongoTemplate.findAndModify(query,new Update().set("tasks.$.workStatus",workstatus),Employee.class);
+        String message="{\"message\":\""+"Status updated Successfully"+"\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+    public ResponseEntity<?> deleteTask(String uuid, String taskId) {
+        Query query = new Query(Criteria.where("uuid").is(uuid).and("tasks.taskId").is(taskId));
+        Update update = new Update().pull("tasks", Query.query(Criteria.where("taskId").is(taskId)));
+        mongoTemplate.updateFirst(query, update, Employee.class);
+        String message = "{\"message\":\"Deleted Successfully\"}";
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 }

@@ -111,4 +111,15 @@ public class EmployeeController {
     {
         return employeeService.updateStatus(uuid,taskId,status);
     }
+    @GetMapping("/updateWorkStatus")
+    public ResponseEntity<?> updateWorkStatus(@RequestParam String uuid,@RequestParam String taskId,@RequestParam String workStatus )
+    {
+        return employeeService.updateWorkStatus(uuid,taskId,workStatus);
+    }
+
+    @DeleteMapping("/deleteTask")
+    public ResponseEntity<?> deleteTask(@RequestParam String uuid,@RequestParam String taskId)
+    {
+        return employeeService.deleteTask(uuid,taskId);
+    }
 }
