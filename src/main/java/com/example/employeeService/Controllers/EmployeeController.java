@@ -2,6 +2,7 @@ package com.example.employeeService.Controllers;
 
 import com.example.employeeService.Models.Employee;
 import com.example.employeeService.Models.LeaveRequest;
+import com.example.employeeService.Models.Task;
 import com.example.employeeService.Models.UserLogin;
 import com.example.employeeService.Services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,5 +92,17 @@ public class EmployeeController {
     public ResponseEntity<?> leaveRequest(@RequestBody LeaveRequest leave)
     {
         return  employeeService.leaveRequest(leave);
+    }
+
+    @PostMapping("/addTask")
+    public ResponseEntity<?> addTask(@RequestBody Task task)
+    {
+        return employeeService.addTask(task);
+    }
+
+    @GetMapping("/fetchTask")
+    public ResponseEntity<?> fetchTask(@RequestParam String uuid)
+    {
+        return employeeService.fetchTask(uuid);
     }
 }

@@ -1,9 +1,6 @@
 package com.example.employeeService.Services;
 
-import com.example.employeeService.Models.EmailRequest;
-import com.example.employeeService.Models.Employee;
-import com.example.employeeService.Models.LeaveRequest;
-import com.example.employeeService.Models.UserLogin;
+import com.example.employeeService.Models.*;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultLifecycleProcessor;
@@ -382,4 +379,36 @@ public class EmployeeService {
         }
         return  ResponseEntity.status(HttpStatus.OK).body("Request Successful");
     }
+
+    public ResponseEntity<?> addTask(Task task)
+    {
+        String message="";
+        Query query=new Query(Criteria.where("uuid").is(task.uuid));
+        Employee exist =mongoTemplate.findOne(query,Employee.class);
+        task.setStatus("assigned");
+        if(exist!=null)
+        {
+            List<Task> currentTask=exist.getTasks();
+            if (currentTask ==null)
+            {
+                currentTask=new ArrayList<Task>();
+            }
+            currentTask.add(task);
+            mongoTemplate.findAndModify(query,new Update().set("tasks",currentTask),Employee.class);
+            message="{\"message\":\""+"Task updated Successfully"+"\"}";
+        }
+        else
+        {
+            message="{\"message\":\""+"Task updation Failed"+"\"}";
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    public ResponseEntity<?> fetchTask(String uuid)
+    {
+        Query query=new Query(Criteria.where("uuid").is(uuid));
+        Employee exist=mongoTemplate.findOne(query,Employee.class);
+        return ResponseEntity.status(HttpStatus.OK).body(exist);
+    }
+
 }

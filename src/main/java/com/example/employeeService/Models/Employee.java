@@ -32,4 +32,5 @@ public class Employee {
     public  String password;
     @JsonProperty("leaveRequests")
     public List<LeaveRequest> leaveRequests;
+    public List<Task> tasks;
 }
