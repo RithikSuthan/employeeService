@@ -251,6 +251,7 @@ public class EmployeeService {
             response = "{\"message\":\"" + message + "\",\"name\":\"" + existEmployee.getEmployeeName() + "\"" +
                     ",\"company\":\"" + existEmployee.getCompany() + "\"" +
                     ",\"userName\":\"" + existEmployee.getEmail() + "\"" +
+                    ",\"creator\":\"" + existEmployee.getCreator() + "\"" +
                     ",\"uuid\":\"" + existEmployee.getUuid() + "\"}";
 
         }
