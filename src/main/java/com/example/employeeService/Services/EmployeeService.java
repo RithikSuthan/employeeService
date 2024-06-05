@@ -386,6 +386,7 @@ public class EmployeeService {
         Query query=new Query(Criteria.where("uuid").is(task.uuid));
         Employee exist =mongoTemplate.findOne(query,Employee.class);
         task.setStatus("assigned");
+        task.setTaskId(UUID.randomUUID().toString());
         if(exist!=null)
         {
             List<Task> currentTask=exist.getTasks();
@@ -411,4 +412,12 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(exist);
     }
 
+    public ResponseEntity<?> updateStatus(String uuid,String taskId,String status)
+    {
+        Query query = new Query(Criteria.where("uuid").is(uuid)
+                .and("tasks.taskId").is(taskId));
+        mongoTemplate.findAndModify(query,new Update().set("tasks.$.status",status),Employee.class);
+        String message="{\"message\":\""+"Status updated Successfully"+"\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 }

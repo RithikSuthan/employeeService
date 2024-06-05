@@ -105,4 +105,10 @@ public class EmployeeController {
     {
         return employeeService.fetchTask(uuid);
     }
+
+    @GetMapping("/updateStatus")
+    public ResponseEntity<?> updateStatus(@RequestParam String uuid,@RequestParam String taskId,@RequestParam String status )
+    {
+        return employeeService.updateStatus(uuid,taskId,status);
+    }
 }
