@@ -94,7 +94,6 @@ public class EmployeeService {
         }
     }
 
-
     public ResponseEntity<List<Employee>> getAllEmployees(String company,String creator) {
         Query query=new Query(Criteria.where("company").is(company).and("creator").is(creator));
         List<Employee> employees = mongoTemplate.find(query,Employee.class);
@@ -423,7 +422,8 @@ public class EmployeeService {
             for (Task task : exist.getTasks()) {
                 try {
                     Date deadlineDate = dateFormat.parse(task.getDeadline());
-                    if (deadlineDate != null && deadlineDate.getTime() < currentTime) {
+                    System.out.println(task.workStatus);
+                    if (deadlineDate != null && deadlineDate.getTime() < currentTime && task.workStatus.equals("Completed")==false) {
                         task.setDeadlineFlag(true);
 
                         // Update the specific task's deadlineFlag
@@ -431,6 +431,17 @@ public class EmployeeService {
                                 Criteria.where("uuid").is(uuid).and("tasks.taskId").is(task.getTaskId())
                         );
                         Update update = new Update().set("tasks.$.deadlineFlag", true);
+                            EmailRequest emailRequest = new EmailRequest();
+                            emailRequest.setName(exist.employeeName);
+                            emailRequest.setMail(exist.email);
+                            emailRequest.setMobile(exist.phoneNumber);
+                            emailRequest.setMessage("Remainder!!! DeadLine for the task "+task.description+" is exceeded."
+                            +"You have set the deadline on "+deadlineDate.toString()+" .Try to complete it as soon as " +
+                                            "possible . Thank You!!!"
+                            );
+                            emailRequest.setSubject("Deadline Exceeded for the Task");
+                            sendRemainderEmail(emailRequest);
+
                         mongoTemplate.findAndModify(updateQuery, update, Employee.class);
                     }
                 } catch (ParseException e) {
@@ -442,11 +453,27 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(exist);
     }
 
+    public void sendRemainderEmail(EmailRequest emailRequest) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://127.0.0.1:5000/sendRemainder";
+
+        try {
+            restTemplate.postForObject(url, emailRequest, String.class);
+            System.out.println("Email sent successfully!");
+        } catch (Exception e) {
+            System.out.println("Error sending email: " + e.getMessage());
+        }
+    }
+
     public ResponseEntity<?> updateStatus(String uuid,String taskId,String status)
     {
         Query query = new Query(Criteria.where("uuid").is(uuid)
                 .and("tasks.taskId").is(taskId));
         mongoTemplate.findAndModify(query,new Update().set("tasks.$.status",status),Employee.class);
+        if(status=="Completed")
+        {
+            mongoTemplate.findAndModify(query,new Update().set("tasks.$.deadlineFlag",false),Employee.class);
+        }
         String message="{\"message\":\""+"Status updated Successfully"+"\"}";
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
