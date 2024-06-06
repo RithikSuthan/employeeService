@@ -122,4 +122,10 @@ public class EmployeeController {
     {
         return employeeService.deleteTask(uuid,taskId);
     }
+
+    @GetMapping("/managerEmployee")
+    public ResponseEntity<?> managerEmployee(@RequestParam String uuid)
+    {
+        return employeeService.managerEmployee(uuid);
+    }
 }

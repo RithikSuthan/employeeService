@@ -437,4 +437,11 @@ public class EmployeeService {
         String message = "{\"message\":\"Deleted Successfully\"}";
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
+    public ResponseEntity<?> managerEmployee(String uuid)
+    {
+        Query query=new Query(Criteria.where("reportsTo").is(uuid));
+        List<Employee> employees=mongoTemplate.find(query,Employee.class);
+        return  ResponseEntity.status(HttpStatus.OK).body(employees);
+
+    }
 }
