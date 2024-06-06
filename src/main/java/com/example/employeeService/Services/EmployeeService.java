@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Comparator;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.util.*;
 
@@ -389,6 +392,7 @@ public class EmployeeService {
         task.setStatus("assigned");
         task.setWorkStatus("Not Yet Started");
         task.setTaskId(UUID.randomUUID().toString());
+        task.setDeadlineFlag(false);
         if(exist!=null)
         {
             List<Task> currentTask=exist.getTasks();
@@ -407,10 +411,34 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    public ResponseEntity<?> fetchTask(String uuid)
-    {
-        Query query=new Query(Criteria.where("uuid").is(uuid));
-        Employee exist=mongoTemplate.findOne(query,Employee.class);
+
+    public ResponseEntity<?> fetchTask(String uuid) {
+        Query query = new Query(Criteria.where("uuid").is(uuid));
+        Employee exist = mongoTemplate.findOne(query, Employee.class);
+
+        if (exist != null && exist.getTasks() != null) {
+            long currentTime = System.currentTimeMillis();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+            for (Task task : exist.getTasks()) {
+                try {
+                    Date deadlineDate = dateFormat.parse(task.getDeadline());
+                    if (deadlineDate != null && deadlineDate.getTime() < currentTime) {
+                        task.setDeadlineFlag(true);
+
+                        // Update the specific task's deadlineFlag
+                        Query updateQuery = new Query(
+                                Criteria.where("uuid").is(uuid).and("tasks.taskId").is(task.getTaskId())
+                        );
+                        Update update = new Update().set("tasks.$.deadlineFlag", true);
+                        mongoTemplate.findAndModify(updateQuery, update, Employee.class);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(exist);
     }
 

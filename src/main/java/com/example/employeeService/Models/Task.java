@@ -14,4 +14,5 @@ public class Task {
         public String status;
         public String uuid;
         public String workStatus;
+        public boolean deadlineFlag;
 }
