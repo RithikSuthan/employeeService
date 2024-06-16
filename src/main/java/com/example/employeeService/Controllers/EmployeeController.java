@@ -128,4 +128,10 @@ public class EmployeeController {
     {
         return employeeService.managerEmployee(uuid);
     }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody UserLogin user)
+    {
+        return  employeeService.changePassword(user);
+    }
 }

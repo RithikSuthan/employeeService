@@ -499,4 +499,12 @@ public class EmployeeService {
         return  ResponseEntity.status(HttpStatus.OK).body(employees);
 
     }
+    public  ResponseEntity<?> changePassword(UserLogin user)
+    {
+        Query query = new Query(Criteria.where("email").is(user.getUserName()));
+        mongoTemplate.findAndModify(query,new Update().set("password",user.getPassword()),Employee.class);
+
+        String message = "{\"message\":\"Password Changed Successfully\"}";
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 }
