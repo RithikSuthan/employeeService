@@ -134,4 +134,15 @@ public class EmployeeController {
     {
         return  employeeService.changePassword(user);
     }
+    @PostMapping("/forgetPassword")
+    public ResponseEntity<?> forgetPassword(@RequestBody UserLogin user)
+    {
+        return  employeeService.forgetPassword(user);
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody UserLogin user)
+    {
+        return  employeeService.resetPassword(user);
+    }
 }

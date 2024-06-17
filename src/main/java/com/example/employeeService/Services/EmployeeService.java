@@ -507,4 +507,64 @@ public class EmployeeService {
         String message = "{\"message\":\"Password Changed Successfully\"}";
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
+    public  ResponseEntity<?> forgetPassword(UserLogin user)
+    {
+        Query query = new Query(Criteria.where("email").is(user.getUserName()));
+        Query query1 = new Query(Criteria.where("userName").is(user.getUserName()));
+        Employee exist=mongoTemplate.findOne(query, Employee.class);
+        UserLogin exist1=mongoTemplate.findOne(query1, UserLogin.class);
+        String message="";
+        if(exist!=null || exist1!=null)
+        {
+            message = "{\"message\":\"Check Your Email\"}";
+
+            EmailRequest emailRequest = new EmailRequest();
+            emailRequest.setMail(user.getUserName());
+            emailRequest.setMessage("This is your reset Email for Password "+
+                    "http://localhost:4200/resetPassword"
+            );
+            emailRequest.setSubject("Reset Password");
+
+            RestTemplate restTemplate = new RestTemplate();
+            String url = "http://127.0.0.1:5000/sendforgetPassword";
+
+            try {
+                restTemplate.postForObject(url, emailRequest, String.class);
+                System.out.println("Email sent successfully!");
+            } catch (Exception e) {
+                System.out.println("Error sending email: " + e.getMessage());
+            }
+
+        }
+        else
+        {
+            message = "{\"message\":\"Email Not Found\"}";
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+    public  ResponseEntity<?> resetPassword(UserLogin user)
+    {
+        Query query = new Query(Criteria.where("email").is(user.getUserName()));
+        Query query1 = new Query(Criteria.where("userName").is(user.getUserName()));
+        Employee exist=mongoTemplate.findOne(query, Employee.class);
+        UserLogin exist1=mongoTemplate.findOne(query1, UserLogin.class);
+        String message="";
+        if(exist!=null)
+        {
+            Query query2 = new Query(Criteria.where("email").is(user.getUserName()));
+            mongoTemplate.findAndModify(query2,new Update().set("password",user.getPassword()),Employee.class);
+            message = "{\"message\":\"Password Changed Successfully\"}";
+        }
+        else if(exist1!=null)
+        {
+            Query query2 = new Query(Criteria.where("userName").is(user.getUserName()));
+            mongoTemplate.findAndModify(query2,new Update().set("password",user.getPassword()),UserLogin.class);
+            message = "{\"message\":\"Password Changed Successfully\"}";
+        }
+        else
+        {
+            message = "{\"message\":\"Email Not Found\"}";
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 }
