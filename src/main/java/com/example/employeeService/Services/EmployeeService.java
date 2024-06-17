@@ -455,7 +455,7 @@ public class EmployeeService {
 
     public void sendRemainderEmail(EmailRequest emailRequest) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://127.0.0.1:5000/sendRemainder";
+        String url = "https://mailboxexpress.el.r.appspot.com/sendRemainder";
 
         try {
             restTemplate.postForObject(url, emailRequest, String.class);
@@ -521,12 +521,12 @@ public class EmployeeService {
             EmailRequest emailRequest = new EmailRequest();
             emailRequest.setMail(user.getUserName());
             emailRequest.setMessage("This is your reset Email for Password "+
-                    "http://localhost:4200/resetPassword"
+                    "https://employeeimage-latest.onrender.com/resetPassword"
             );
             emailRequest.setSubject("Reset Password");
 
             RestTemplate restTemplate = new RestTemplate();
-            String url = "http://127.0.0.1:5000/sendforgetPassword";
+            String url = "https://mailboxexpress.el.r.appspot.com/sendforgetPassword";
 
             try {
                 restTemplate.postForObject(url, emailRequest, String.class);
