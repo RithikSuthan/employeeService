@@ -416,7 +416,7 @@ public class EmployeeService {
         Employee exist = mongoTemplate.findOne(query, Employee.class);
 
         if (exist != null && exist.getTasks() != null) {
-            long currentTime = System.currentTimeMillis()+23400000;
+            long currentTime = System.currentTimeMillis()+19800000;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
             for (Task task : exist.getTasks()) {
@@ -525,7 +525,7 @@ public class EmployeeService {
             EmailRequest emailRequest = new EmailRequest();
             emailRequest.setMail(user.getUserName());
             emailRequest.setMessage("This is your reset Email for Password "+
-                    "https://employeeimage-latest.onrender.com/resetPassword"
+                    "https://employeeimage-latest.onrender.com/#/resetPassword"
             );
             emailRequest.setSubject("Reset Password");
 
