@@ -3,7 +3,6 @@ com\example\employeeService\mongoConfig\mongoConfig.class
 com\example\employeeService\Models\Task.class
 com\example\employeeService\Models\LeaveRequest.class
 com\example\employeeService\EmployeeServiceApplication.class
-com\example\employeeService\Controllers\WebController.class
 com\example\employeeService\Models\UserLogin.class
 com\example\employeeService\Services\EmployeeService.class
 com\example\employeeService\Models\EmailRequest.class

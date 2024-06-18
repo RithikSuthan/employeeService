@@ -416,13 +416,17 @@ public class EmployeeService {
         Employee exist = mongoTemplate.findOne(query, Employee.class);
 
         if (exist != null && exist.getTasks() != null) {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis()+23400000;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
             for (Task task : exist.getTasks()) {
                 try {
                     Date deadlineDate = dateFormat.parse(task.getDeadline());
                     System.out.println(task.workStatus);
+                    System.out.println("Deadline Date: " + deadlineDate);
+                    Date currentDate = new Date(currentTime);
+                    System.out.println("Current Date: " + currentDate);
+                    System.out.println("Work Status: " + task.getWorkStatus());
                     if (deadlineDate != null && deadlineDate.getTime() < currentTime && task.workStatus.equals("Completed")==false) {
                         task.setDeadlineFlag(true);
 
