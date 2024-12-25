@@ -84,7 +84,7 @@ public class EmployeeService {
     public void sendEmail(EmailRequest emailRequest) {
         RestTemplate restTemplate = new RestTemplate();
 //        String url = "https://helper-api-vignu.el.r.appspot.com/mail_merchant/sendmail/663263cb5fee3ae2701d0c97";
-        String url = "https://mailboxexpress.el.r.appspot.com/reportManager";
+        String url = "https://mailbox-express-k9hn.onrender.com/reportManager";
 
         try {
             restTemplate.postForObject(url, emailRequest, String.class);
@@ -459,7 +459,7 @@ public class EmployeeService {
 
     public void sendRemainderEmail(EmailRequest emailRequest) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "https://mailboxexpress.el.r.appspot.com/sendRemainder";
+        String url = "https://mailbox-express-k9hn.onrender.com/sendRemainder";
 
         try {
             restTemplate.postForObject(url, emailRequest, String.class);
