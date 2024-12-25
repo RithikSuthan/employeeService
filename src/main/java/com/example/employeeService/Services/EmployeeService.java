@@ -530,8 +530,9 @@ public class EmployeeService {
             emailRequest.setSubject("Reset Password");
 
             RestTemplate restTemplate = new RestTemplate();
-            String url = "https://mailboxexpress.el.r.appspot.com/sendforgetPassword";
+//            String url = "https://mailboxexpress.el.r.appspot.com/sendforgetPassword";
 
+            String url = "https://mailbox-express-k9hn.onrender.com/sendforgetPassword";
             try {
                 restTemplate.postForObject(url, emailRequest, String.class);
                 System.out.println("Email sent successfully!");
